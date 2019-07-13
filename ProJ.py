@@ -20,7 +20,7 @@ Buzzer.deinit()
 statEnt = 'Out'
 statDetect = 'Detect'
 statHit = 0
-count = 0
+count = 1
 
 
 ssid='exceed16_8'
@@ -111,8 +111,8 @@ def ToNetwork():
     r1 = urequests.get(url).json()
     status = r1['status']
     alertStatus = r1['alertStatus']
-    startEnt = r1['startEnt']
-    startDetect = r1['startDetect']
+    startEnt = int(r1['startEnt'])
+    startDetect = int(r1['startDetect'])
     #statHit = int(r1['statHit'])
     if station.isconnected():
       if status == 'Alert':
@@ -138,6 +138,7 @@ def ToNetwork():
       r1 = urequests.get(url).json()
       #statHit = int(r1['statHit'])
       status = r1['status']
+      startEnt = int(r1['startEnt'])
       if status == 'Basic':
         R.value(0)
         G.value(0)
@@ -145,6 +146,7 @@ def ToNetwork():
     
     r1 = urequests.get(url).json()
     status = r1['status']
+    startEnt = int(r1['startEnt'])
     #statHit = int(r1['statHit'])
     data = {'statEnt':statEnt,'statDetect':statDetect,'statHit':statHit,'status':status,'alertStatus':alertStatus,'startEnt':startEnt,'startDetect':startDetect}
     js = json.dumps({'data':data})
