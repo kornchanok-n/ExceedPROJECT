@@ -17,7 +17,7 @@ Buzzer.freq(10)
 Buzzer.deinit()
 
 
-statEnt = 'In'
+statEnt = 'Out'
 statDetect = 'Detect'
 statHit = 0
 count = 0
@@ -60,9 +60,11 @@ def isEntrance():
       count+=1
     if count % 2 == 1 :
       statEnt = 'In'
+      print('now In')
       sleep(1)
     else:
       statEnt = 'Out'
+      print('now Out')
       sleep(1)
   
 def isDetect():
@@ -82,7 +84,7 @@ def isHit():
     
     if HS.value()==0:
       statHit = int(statHit) + 1
-      print(statHit)
+      print('HIT',statHit)
       sleep(1)
 
 def ToNetwork():
@@ -141,6 +143,8 @@ def ToNetwork():
         G.value(0)
         B.value(0)
     
+    r1 = urequests.get(url).json()
+    status = r1['status']
     #statHit = int(r1['statHit'])
     data = {'statEnt':statEnt,'statDetect':statDetect,'statHit':statHit,'status':status,'alertStatus':alertStatus,'startEnt':startEnt,'startDetect':startDetect}
     js = json.dumps({'data':data})
@@ -154,6 +158,7 @@ thread(isDetect,())
 thread(isEntrance,())
 thread(isHit,())
 thread(ToNetwork,())
+
 
 
 
