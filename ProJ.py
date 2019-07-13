@@ -55,7 +55,7 @@ def isEntrance():
   global count
   Laser.value(1)
   while(1):
-    print(LDR.value())
+    #print(LDR.value())
     if LDR.value() == 1:
       count+=1
     if count % 2 == 1 :
@@ -79,9 +79,11 @@ def isDetect():
 def isHit():
   global statHit
   while(1):
+    
     if HS.value()==0:
-      statHit += 1
-      sleep(1.5)
+      statHit = int(statHit) + 1
+      print(statHit)
+      sleep(1)
 
 def ToNetwork():
   global statDetect,statEnt,statHit,data,r,r1
@@ -109,10 +111,10 @@ def ToNetwork():
     alertStatus = r1['alertStatus']
     startEnt = r1['startEnt']
     startDetect = r1['startDetect']
-    statHit = r1['statHit']
+    #statHit = int(r1['statHit'])
     if station.isconnected():
       if status == 'Alert':
-        for i in range(3):
+        for i in range(5):
           
           Buzzer = PWM(Pin(18))
           Buzzer.freq(10)
@@ -129,16 +131,17 @@ def ToNetwork():
           B.value(1)
           sleep(0.5)
           Buzzer.deinit()
+        statHit = 0
       
       r1 = urequests.get(url).json()
-      statHit = r1['statHit']
+      #statHit = int(r1['statHit'])
       status = r1['status']
       if status == 'Basic':
         R.value(0)
         G.value(0)
         B.value(0)
     
-    statHit = r1['statHit']
+    #statHit = int(r1['statHit'])
     data = {'statEnt':statEnt,'statDetect':statDetect,'statHit':statHit,'status':status,'alertStatus':alertStatus,'startEnt':startEnt,'startDetect':startDetect}
     js = json.dumps({'data':data})
     r = urequests.post(url,data=js,headers=headers)
@@ -151,6 +154,7 @@ thread(isDetect,())
 thread(isEntrance,())
 thread(isHit,())
 thread(ToNetwork,())
+
 
 
 
